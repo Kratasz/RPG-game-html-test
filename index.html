@@ -1,0 +1,189 @@
+<html>
+  <head>
+    <title>Pokémon Red</title>
+    <style>
+      /* Styles to position the map and player on the page go here */
+      #map {
+        position: relative;
+        width: 500px;
+        height: 500px;
+        border: 1px solid black;
+      }
+
+      .cell {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        background-color: transparent;
+      }
+
+      .sign {
+        background-color: yellow;
+      }
+
+      #player {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Pokémon Red</h1>
+    <p>Welcome to the world of Pokémon!</p>
+    <p>Use the arrow keys to move around the map and press 'Enter' to read the text on signboards.</p>
+    <div id="map" style="background-image: url('map_pokemon_town.jpg')">
+        <!-- The signboards go here -->
+      </div>
+      
+    <img id="player" src="player.png" alt="Player">
+    <script>
+      // Code to generate the map and handle player movement goes here
+
+      // Initialize the map
+      const map = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      ];
+     
+      const signs = [
+  [null, null, null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null, null, null],
+  [null, null, null, null, 'Signboard!!!', null, null, null, null, null],
+  [null, null, null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null, null, null]
+];
+
+      // Initialize the player's position to the center of the map
+let playerX = Math.floor(map[0].length / 2);
+let playerY = Math.floor(map.length / 2);
+
+
+     // Function to render the map and player on the page
+function render() {
+  const mapElement = document.getElementById('map');
+  const playerElement = document.getElementById('player');
+
+  // Clear the map element
+  while (mapElement.firstChild) {
+    mapElement.removeChild(mapElement.firstChild);
+  }
+
+  // Loop through the map and add a div element for each cell
+  for (let y = 0; y < map.length; y++) {
+    for (let x = 0; x < map[y].length; x++) {
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+
+      // If the cell contains a signboard, add a sign class
+      if (map[y][x] === 1) {
+        cell.classList.add('sign');
+      }
+
+// Set the cell's position on the page
+cell.style.top = y * (mapElement.offsetHeight / map.length) + 'px';
+cell.style.left = x * (mapElement.offsetWidth / map[y].length) + 'px';
+
+
+      // Add the cell to the map element
+      mapElement.appendChild(cell);
+    }
+  }
+
+  // Set the player's position on the page
+  playerElement.style.top = playerY * 50 + 'px';
+  playerElement.style.left = playerX * 50 + 'px';
+}
+
+// Function to handle keydown events
+function handleKeyDown(event) {
+  // Get the map and player elements
+  const mapElement = document.getElementById('map');
+  const playerElement = document.getElementById('player');
+  // Function to handle keydown events
+function handleKeyDown(event) {
+  // Check if the player pressed the Enter key
+  if (event.keyCode === 13) {
+    // Check if the player is on a signboard
+    if (map[playerY][playerX] === 1) {
+      // Show the signboard's text
+      alert(signs[playerY][playerX]);
+    }
+  }
+}
+
+  // Check which key was pressed
+  switch (event.key) {
+    case 'ArrowLeft':
+      // Move the player left
+      if (playerX > 0) {
+        playerX -= 1;
+        playerElement.style.left = playerX * 50 + 'px';
+      }
+      break;
+    case 'ArrowRight':
+      // Move the player right
+      if (playerX < map[0].length - 1) {
+        playerX += 1;
+        playerElement.style.left = playerX * 50 + 'px';
+      }
+      break;
+    case 'ArrowUp':
+      // Move the player up
+      if (playerY > 0) {
+        playerY -= 1;
+        playerElement.style.top = playerY * 50 + 'px';
+      }
+      break;
+    case 'ArrowDown':
+      // Move the player down
+      if (playerY < map.length - 1) {
+        playerY += 1;
+        playerElement.style.top = playerY * 50 + 'px';
+      }
+      break;
+    case 'Enter':
+      // Check if the player is on a signboard
+      if (map[playerY][playerX] === 1) {
+        // Show the signboard's text
+        alert('This is a signboard. Press OK to continue.');
+      }
+      break;
+  }
+}
+
+// Add an event listener to handle keydown events
+document.addEventListener('keydown', handleKeyDown);
+
+// Call the render function to draw the initial map and player
+render();
+
+// Can add code here to update the map and player's position based on the game's logic
+// For example, you can add random encounters with Pokémon, or allow the player to pick up items on the map
+// Can also add more complex features, like a menu system or a battle system
+
+// Function to initialize the game
+function init() {
+  // Call the render function to draw the initial map and player
+  render();
+}
+
+// Add an event listener to call the init function when the page loads
+window.addEventListener('load', init);
+
+</script>
+</body>
+</html>
